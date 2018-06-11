@@ -1,0 +1,119 @@
+ 
+  
+  
+  
+$(document).ready(function(){
+  
+   BtnValidation();
+    $("#ExaminButton").click(function (event){
+        event.preventDefault();
+        var HiddenValue=$("#HiddenV").val();
+        var xhttp=new XMLHttpRequest();
+        xhttp.open("POST","DeleteExamin.jsp",true);
+        xhttp.setRequestHeader("Content-type","application/x-www-form-urlencoded");
+        xhttp.send("HiddenV="+HiddenValue+"");
+        xhttp.onreadystatechange=function(){
+                                   if(xhttp.readyState===4 && xhttp.status===200)
+                                    {
+                                        var f=xhttp.responseText;
+                                        //var f1=xhttp.responseText.localeCompare("No File To  Delete");
+                                              if(f==="File Deleted")
+                                                 {
+                                                   alert("Hello Bay");
+              
+                                                      $("#btnSubmit").prop("disabled", false);
+                                                      $("#ExaminButton").prop("disabled",true );
+                                                 }
+                                       else
+                                         {
+                                            alert(xhttp.responseText);
+                                           $("#btnSubmit").prop("disabled", false);
+                                           $("#ExaminButton").prop("disabled",true);
+                   
+                                         }
+                                     }
+        
+        
+                                            };
+    });
+    
+    
+    $("#btnSubmit").click(function (event) {
+        event.preventDefault();
+
+             var x=$("#UsernameExamin").val();
+             var y=$("#menu1").val();
+             var z=$("file").val();
+           // Get form
+              var form = $("#UploadForm")[0];
+           
+		// Create an FormData object
+            var data = new FormData(form);
+            
+		// If you want to add an extra field for the FormData
+     //        data.append("CustomField", "This is some extra data, testing");
+
+		// disabled the submit button
+      //  $("#btnSubmit").prop("disabled", true);
+            if(x!=='' && y!=='' && z!=='')
+         {
+        $.ajax({
+            type: "POST",
+            enctype: 'multipart/form-data',
+            url: "Upload.jsp?UsernameExamin="+x+"&session="+y+"",
+            data: data,
+            processData: false,
+            contentType: false,
+            cache: false,
+            timeout: 600000,
+            success: function (data) {
+
+                alert("File Uploaded"+data);
+                $("#btnSubmit").prop("disabled", true);
+                $("#ExaminButton").prop("disabled", false);
+               
+            }
+            
+        });
+        }
+        else{
+            alert("Please Fill all the Details");
+            $("#UsernameExamin").val("");
+              y=$("#menu").val("");
+              z=$("file").val("");
+        }
+    });
+
+
+});
+
+function BtnValidation(){
+    
+    var HiddenValue="1";
+        var xhttp=new XMLHttpRequest();
+        xhttp.open("POST","CheckIn.jsp",true);
+        xhttp.setRequestHeader("Content-type","application/x-www-form-urlencoded");
+        xhttp.send("HiddenV="+HiddenValue+"");
+        xhttp.onreadystatechange=function(){
+                                   if(xhttp.readyState===4 && xhttp.status===200)
+                                    {
+                                        var f=xhttp.responseText;
+                                        
+                                              if(f.localeCompare("1"))
+                                                 {
+              
+                                                      $("#btnSubmit").prop("disabled", true);
+                                                      $("#ExaminButton").prop("disabled",false );
+                                                 }
+                                             if(f.localeCompare("0"))
+                                             {
+                                                  $("#btnSubmit").prop("disabled", true);
+                                                      $("#ExaminButton").prop("disabled",false );
+                                             }
+                                       
+                                     }
+        
+        
+                                            };
+ 
+}
